@@ -1,8 +1,11 @@
 'use client';
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, use } from "react";
 import { lyrics } from "@/utils/lyrics";
+import { useRouter } from "next/navigation";
+
 
 const YouTubeLyrics = () => {
+
     const [player, setPlayer] = useState(null);
     const [currentTime, setCurrentTime] = useState(0);
     const [visibleWords, setVisibleWords] = useState<{ time: number; text: string; krText: string, id: string; duration: number; }[]>([]);
@@ -10,7 +13,9 @@ const YouTubeLyrics = () => {
     const containerRefKr = useRef<HTMLDivElement>(null);
     const spanRefs = useRef<{ [key: string]: HTMLSpanElement }>({});
     const spanRefsKr = useRef<{ [key: string]: HTMLSpanElement }>({});
+
     useEffect(() => {
+
         const loadYouTubeIframeAPI = () => {
             if (!(window as any).YT) {
                 const script = document.createElement("script");
@@ -19,6 +24,7 @@ const YouTubeLyrics = () => {
                 document.body.appendChild(script);
             }
 
+            // YouTube API가 이미 로드된 경우에도 onYouTubeIframeAPIReady 이벤트가 호출되도록 설정
             (window as any).onYouTubeIframeAPIReady = () => {
                 const playerInstance = new (window as any).YT.Player("player", {
                     height: "360",
@@ -35,8 +41,12 @@ const YouTubeLyrics = () => {
                 });
                 setPlayer(playerInstance);
             };
-        };
 
+            // YT가 이미 로드된 경우 바로 초기화
+            if ((window as any).YT && (window as any).YT.Player) {
+                (window as any).onYouTubeIframeAPIReady();
+            }
+        };
         loadYouTubeIframeAPI();
     }, []);
 
