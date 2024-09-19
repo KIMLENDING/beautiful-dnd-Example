@@ -200,32 +200,32 @@ const inputLyrics = `
 을 믿어
 4:05
 [음악]`
-function convertTimeToSeconds(timeStr: string): number {
+function convertTimeToSeconds(timeStr: string): number { // 00:00 형식의 문자열을 숫자로 변환
     const [minutes, seconds] = timeStr.split(':').map(Number);
     return minutes * 60 + seconds;
 }
 
 function parseWord(timeStr: string, text: string, index: number, nextTime?: number): Word {
-    const time = convertTimeToSeconds(timeStr);
+    const time = convertTimeToSeconds(timeStr); // 시간을 초로(number) 변환
     return {
         time,
         text,
         krText: text,
         id: `word${index}`,
-        duration: nextTime ? nextTime - time : 10 // 마지막 단어의 경우 10초로 설정
+        duration: nextTime ? nextTime - time : 10 // 다음 가사의 시작시간 - 현재 가사의 시작시간 = 길이 ||마지막 단어의 경우 10초로 설정 (임의로)
     };
 }
 
 function parseLyrics(input: string): Word[] {
-    const lines = input.split('\n').filter(line => line.trim() !== '');
+    const lines = input.split('\n').filter(line => line.trim() !== ''); // 빈 줄 제거 하고 배열로 만듬
     const words: Word[] = [];
-
+    // 짝수 번째 줄은 시간, 홀수 번째 줄은 가사
     for (let i = 0; i < lines.length; i += 2) {
-        const timeStr = lines[i];
-        const text = lines[i + 1] || '';
-        const nextTimeStr = lines[i + 2];
+        const timeStr = lines[i]; // 시간 텍스트
+        const text = lines[i + 1] || ''; // 가사
+        const nextTimeStr = lines[i + 2]; // 다음 시간 텍스트
 
-        const nextTime = nextTimeStr ? convertTimeToSeconds(nextTimeStr) : undefined;
+        const nextTime = nextTimeStr ? convertTimeToSeconds(nextTimeStr) : undefined; // 시간을 초로(number) 변환
         words.push(parseWord(timeStr, text, i / 2, nextTime));
     }
 
@@ -237,4 +237,4 @@ export const getLyrics = (input: string): Word[] => {
     return parseLyrics(input);
 };
 
-getLyrics(inputLyrics);
+// getLyrics(inputLyrics);

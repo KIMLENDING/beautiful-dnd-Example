@@ -65,6 +65,7 @@ export default function Home() {
             <div>1. 유튜브에서 동영상의 설명란을 누르면 스크립트가 있다 그 부분을 복사해서 가사를 입력</div>
             <div>예시: </div>
             <textarea name="" id="" placeholder={exlyrics} className="flex min-w-64  min-h-24" disabled></textarea>
+            <div className="text-yellow-500"> 타임스탬프가 가사에 딱 맞게 되어있어야 보기 좋음  </div>
             <div>이런 식으로 복사될 것이다. 이걸 붙여 넣고 </div>
             <div>2. 유튜브 동영상 주소를 입력 url을 복사하면 된다.</div>
             <div>예시:https://www.youtube.com/watch?v=ntil6RLnBZc&list=OLAK5uy_kXrY5CSmOSkKj4AFBlqBNM7Cg-b60tgBM&index=1</div>
