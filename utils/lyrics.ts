@@ -1,14 +1,13 @@
 export interface Word {
     time: number;
-    text: string;
-    krText: string;
+    text?: string;
+    krText?: string;
     id: string;
     duration: number;
 }
-// lyrics.ts
 
 // lyrics.ts
-export const lyrics = [
+export const lyricsYuuri = [
     { time: 1, text: "[音楽]", krText: "노래", id: "word1", duration: 11 },
     { time: 12, text: "人生は無常だ", krText: "인생은 허무해", id: "word2", duration: 2 },
     { time: 14, text: "好きだけじゃやっていけない", krText: "좋아하는 것만으로는 살아갈 수 없어", id: "word3", duration: 3.6 },
@@ -75,3 +74,167 @@ export const lyrics = [
     { time: 231.7, text: "だから夢が叶った", krText: "그래서 꿈이 이루어졌어", id: "word66", duration: 2 },
     { time: 234, text: "この景色があるんだ", krText: "이 경치가 보여", id: "word67", duration: 2 },
 ];
+
+const inputLyrics = `
+0:00
+[음악]
+0:14
+하루가 가는 소리 들어 넘는 세상
+0:20
+속에 다리
+0:22
+저물고 해가 뜨는
+0:27
+서러운 한 날도
+0:31
+시도 못 살 것
+0:34
+같더니 그저
+0:36
+이렇게
+0:39
+그리워하며
+0:42
+살아
+0:44
+어디서부터 잊어 갈까 오늘도 기억
+0:50
+속에 네가
+0:52
+찾아와 하루 종이
+0:57
+떠들어네 말투
+1:00
+네
+1:00
+표정 너무
+1:03
+분명해서 마치
+1:05
+지금도 내
+1:08
+곁에 네가 사는 것만
+1:12
+같아 사랑인 걸 사랑인 걸 지워봐도
+1:18
+사랑인 걸 아무리
+1:23
+원해도 내 안에는 너만
+1:26
+사랑 너 하나만 너
+1:30
+하나만 기억하고 원하는 걸 보고픈
+1:36
+너의
+1:38
+사진을 꺼내어 보다
+1:49
+잠들어
+1:51
+어디서부터 잊어 갈까 오늘도 기억
+1:56
+속에 네가 찾아와
+2:00
+하루 종이
+2:03
+더들어네
+2:05
+말투네
+2:07
+표정 너무
+2:10
+분명해서 마치
+2:12
+지금도 내
+2:14
+곁에 네가 사는 것만
+2:18
+같아 사랑인 걸 사랑인 걸 지워봐도
+2:24
+사랑인 걸 아무리 비워내도
+2:30
+내 안에는 너만
+2:33
+사아 너
+2:35
+하나만 너
+2:37
+하나만 기억하고 원하는 걸 보고픈
+2:42
+너의
+2:45
+사진이 꺼내어보다
+2:48
+잠들어 잠결에
+2:50
+흐르던 눈물이 곳 말라
+2:55
+거들 조금씩 그려지겠지
+3:04
+손내밀면 달듯 아직은 눈에 선한이
+3:10
+얼굴
+3:12
+사랑해 사랑해 잊으면
+3:20
+[음악]
+3:23
+안돼 너만 보고 너만 알고 너만 위해
+3:28
+살아
+3:30
+난 마음들 곳을
+3:34
+몰라 하루가 년
+3:37
+같아
+3:39
+아무것도 아무 일도 아무 말도 못하는
+3:45
+나 그래도 사랑을
+3:49
+믿어 그래도 사랑을
+3:57
+믿어 오늘도 사랑
+4:01
+을 믿어
+4:05
+[음악]`
+function convertTimeToSeconds(timeStr: string): number {
+    const [minutes, seconds] = timeStr.split(':').map(Number);
+    return minutes * 60 + seconds;
+}
+
+function parseWord(timeStr: string, text: string, index: number, nextTime?: number): Word {
+    const time = convertTimeToSeconds(timeStr);
+    return {
+        time,
+        text,
+        krText: text,
+        id: `word${index}`,
+        duration: nextTime ? nextTime - time : 10 // 마지막 단어의 경우 10초로 설정
+    };
+}
+
+function parseLyrics(input: string): Word[] {
+    const lines = input.split('\n').filter(line => line.trim() !== '');
+    const words: Word[] = [];
+
+    for (let i = 0; i < lines.length; i += 2) {
+        const timeStr = lines[i];
+        const text = lines[i + 1] || '';
+        const nextTimeStr = lines[i + 2];
+
+        const nextTime = nextTimeStr ? convertTimeToSeconds(nextTimeStr) : undefined;
+        words.push(parseWord(timeStr, text, i / 2, nextTime));
+    }
+
+    return words;
+}
+
+// 테스트 함수
+export const getLyrics = (input: string): Word[] => {
+    return parseLyrics(input);
+};
+
+getLyrics(inputLyrics);

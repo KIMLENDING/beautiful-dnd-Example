@@ -3,21 +3,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React, { useEffect, useState, useRef } from "react";
-import { lyrics } from "@/utils/lyrics";
+import { lyricsYuuri, Word } from "@/utils/lyrics";
 
-
-const YouTubeLyrics = () => {
+interface YouTubeLyricsProps {
+    lyrics: Word[];
+    videoId: string;
+}
+const YouTubeLyrics = ({ lyrics, videoId = 'k-jkldtzf4s' }: YouTubeLyricsProps) => {
 
     const [player, setPlayer] = useState(null);
     const [currentTime, setCurrentTime] = useState(0);
-    const [visibleWords, setVisibleWords] = useState<{ time: number; text: string; krText: string, id: string; duration: number; }[]>([]);
+    const [visibleWords, setVisibleWords] = useState<Word[]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
     const containerRefKr = useRef<HTMLDivElement>(null);
     const spanRefs = useRef<{ [key: string]: HTMLSpanElement }>({});
     const spanRefsKr = useRef<{ [key: string]: HTMLSpanElement }>({});
 
     useEffect(() => {
-
         const loadYouTubeIframeAPI = () => {
             if (!(window as any).YT) {
                 const script = document.createElement("script");
@@ -26,31 +28,33 @@ const YouTubeLyrics = () => {
                 document.body.appendChild(script);
             }
 
-            // YouTube API가 이미 로드된 경우에도 onYouTubeIframeAPIReady 이벤트가 호출되도록 설정
-            (window as any).onYouTubeIframeAPIReady = () => {
-                const playerInstance = new (window as any).YT.Player("player", {
-                    height: "360",
-                    width: "640",
-                    videoId: "k-jkldtzf4s",
-                    events: {
-                        onReady: (event: any) => {
-                            setInterval(() => {
-                                const time = event.target.getCurrentTime();
-                                setCurrentTime(time);
-                            }, 100);
-                        },
-                    },
-                });
-                setPlayer(playerInstance);
-            };
+            (window as any).onYouTubeIframeAPIReady = initializePlayer;
 
-            // YT가 이미 로드된 경우 바로 초기화
             if ((window as any).YT && (window as any).YT.Player) {
-                (window as any).onYouTubeIframeAPIReady();
+                initializePlayer();
             }
         };
+
+        const initializePlayer = () => {
+            const playerInstance = new (window as any).YT.Player("player", {
+                height: "360",
+                width: "640",
+                videoId: videoId,
+                events: {
+                    onReady: (event: any) => {
+                        setInterval(() => {
+                            const time = event.target.getCurrentTime();
+                            setCurrentTime(time);
+                        }, 100);
+                    },
+                },
+            });
+            setPlayer(playerInstance);
+        };
+
         loadYouTubeIframeAPI();
-    }, []);
+
+    }, [videoId, lyrics]);
 
     useEffect(() => {
         const currentWords = lyrics.filter(
@@ -73,7 +77,10 @@ const YouTubeLyrics = () => {
         const percentage = (elapsedTime / word.duration) * 100;
         return Math.min(Math.max(percentage, 0), 100);
     };
-    console.log(player);
+
+    if (!player || !videoId) {
+        return null;
+    }
     return (
         <div className=" flex flex-col  mx-auto">
             <div id="player"></div>
@@ -96,7 +103,7 @@ const YouTubeLyrics = () => {
                                     if (el) {
                                         spanRefs.current[word.id] = el;
                                     }
-                                }} className="font-extrabold mix-blend-difference text-white">{word.text}</span>
+                                }} className="font-extrabold mix-blend-difference text-white">{word?.text}</span>
                             </div>
                         </div>
                     </div>
@@ -121,7 +128,7 @@ const YouTubeLyrics = () => {
                                     if (el) {
                                         spanRefsKr.current[word.id] = el;
                                     }
-                                }} className="font-extrabold mix-blend-difference text-white">{word.krText}</span>
+                                }} className="font-extrabold mix-blend-difference text-white">{word?.krText}</span>
                             </div>
                         </div>
                     </div>
