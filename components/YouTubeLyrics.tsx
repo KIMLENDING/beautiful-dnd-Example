@@ -1,7 +1,6 @@
 'use client';
 import React, { useEffect, useState, useRef, use } from "react";
 import { lyrics } from "@/utils/lyrics";
-import { useRouter } from "next/navigation";
 
 
 const YouTubeLyrics = () => {
