@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState, useRef, use } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { lyrics } from "@/utils/lyrics";
 
 
@@ -70,7 +70,7 @@ const YouTubeLyrics = () => {
         const percentage = (elapsedTime / word.duration) * 100;
         return Math.min(Math.max(percentage, 0), 100);
     };
-
+    console.log(player);
     return (
         <div className=" flex flex-col  mx-auto">
             <div id="player"></div>
