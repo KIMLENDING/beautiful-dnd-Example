@@ -156,6 +156,7 @@ export default function TodoLibraryExample({
                                                                             value={item.inputText}
                                                                             onChange={(e) => onInputChange(item.id, e.target.value, 'inputText')}
                                                                         />
+
                                                                     </div>
                                                                 )}
                                                             </Draggable>
@@ -219,9 +220,7 @@ export default function TodoLibraryExample({
                                                                 </button>
                                                             </div>
                                                         </>)
-
                                                         }
-
                                                         {provided.placeholder}
                                                     </div>
                                                 )}
