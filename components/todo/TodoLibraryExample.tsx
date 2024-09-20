@@ -25,22 +25,25 @@ export default function TodoLibraryExample({
     onAddItem,
     onDeleteItem,
 }: {
-    items: TItems;
-    setItems: (items: TItems) => void;
+    items: TItems; // 아이템 리스트
+    setItems: (items: TItems) => void;  // 아이템 업데이트
     onInputChange: (id: string, value: string, type: string) => void;
     onAddItem: (status: TItemStatus) => void;
     onDeleteItem: (id: string) => void;
 }) {
     const onDragEnd = ({ source, destination }: DropResult) => {
         if (!destination) return;
+        // source : 선택된 아이템, destination : 드롭된 위치
+        // source와 destination 은 droppableld와 index를 가지고 있다.
 
-        const sourceKey = source.droppableId as TItemStatus;
-        const destinationKey = destination.droppableId as TItemStatus;
+        const sourceKey = source.droppableId as TItemStatus; // 선택된 아이템 필드아이디
+        const destinationKey = destination.droppableId as TItemStatus; // 드롭된 위치의 필드아이디
 
-        const _items = JSON.parse(JSON.stringify(items)) as typeof items;
-        const [targetItem] = _items[sourceKey].splice(source.index, 1);
-        _items[destinationKey].splice(destination.index, 0, targetItem);
-        setItems(_items);
+        const _items = JSON.parse(JSON.stringify(items)) as typeof items; // 깊은 복사
+        const [targetItem] = _items[sourceKey].splice(source.index, 1); // 구조분해할당
+
+        _items[destinationKey].splice(destination.index, 0, targetItem); // 드롭된 위치에 아이템 추가
+        setItems(_items); // 아이템 업데이트
     };
 
     // --- requestAnimationFrame 초기화
@@ -78,6 +81,7 @@ export default function TodoLibraryExample({
                                         className={cn(
                                             'flex flex-col gap-3 rounded-xl bg-gray-200 p-4 ring-1 ring-gray-300 transition-shadow dark:bg-[#000000]',
                                             snapshot.isDraggingOver ? 'shadow-lg' : 'shadow',
+                                            'h-fit'
                                         )}
                                     >
                                         <div className="flex justify-between items-center">

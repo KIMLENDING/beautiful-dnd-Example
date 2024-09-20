@@ -6,12 +6,19 @@ import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautif
 export default function App() {
 
   // --- Mock 데이터
-  const items = [...Array(4)].map((_, i) => ({ id: `${i}${i}${i}`, content: `item-${i}` }));
 
+
+  const [items, setItems] = useState([...Array(4)].map((_, i) => ({ id: `${i}${i}${i}`, content: `item-${i}` })));
   // --- Draggable이 Droppable로 드래그 되었을 때 실행되는 이벤트
   const onDragEnd = ({ source, destination }: DropResult) => {
-    console.log('>>> source', source);
-    console.log('>>> destination', destination);
+    if (!destination) return;
+    console.log('>>> source', source); // 선택된 아이템
+    console.log('>>> destination', destination); // 드롭된 위치
+    const _items = [...items];
+    const [targetItem] = _items.splice(source.index, 1); // 선택된 아이템
+    _items.splice(destination.index, 0, targetItem); // 드롭된 위치에 아이템 추가
+    setItems(_items); // 업데이트
+
   };
 
   // --- requestAnimationFrame 초기화
@@ -33,7 +40,7 @@ export default function App() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="droppable">
+      <Droppable droppableId="all-columns">
         {(provided) => (
           <div ref={provided.innerRef} {...provided.droppableProps}>
             {items.map((item, index) => (
@@ -56,3 +63,37 @@ export default function App() {
     </DragDropContext>
   );
 }
+/**
+ <DragDropContext>
+    <Droppable droppableId="all-columns">
+    {(provided) => (
+        <div className="listBox"
+                            {...provided.droppableProps}
+                            ref={provided.innerRef}>
+            {items.map((item, index) => {
+                <Draggable draggableId={고유 값1} index={index}>
+                    {(provided) => (
+                    <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                    >
+                         <Droppable droppableId={고유값 2} type="task">
+                         {(provided, snapshot) => (<div ref={provided.innerRef}
+                                                        className={clsx("task_list", snapshot.isDraggingOver ? 'active' : null)}
+                                                        {...provided.droppableProps}>
+                            {item.content}
+                            </div>
+                                
+                        </Droppable>
+                        {item.content}
+                    </div>
+                )}
+                </Draggable>
+            })}
+        </div>
+        )}
+    </Droppable>
+ </DragDropContext>
+ * 컨택스트-> 드롭 -> 드래그 ->  드롭 -> 드래그
+*/

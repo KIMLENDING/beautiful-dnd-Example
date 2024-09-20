@@ -37,6 +37,7 @@ export default function RootLayout({
           <Link href={'/lyrics'}>lyrics</Link>
           <Link href={'/test'}>test</Link>
           <Link href={'/test2'}>test2</Link>
+          <Link href={'/sample'}>sample</Link>
         </div>
         {children}
       </body>
