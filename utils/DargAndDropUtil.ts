@@ -31,6 +31,7 @@ function getTextWidth(content: any) {
 
 export function chunkArray(array: any[], maxWidth = 1700, maxItemsPerRow = 5) {
     //maxWidth는 화면의 너비를 의미함
+    // array : chunk할 배열
     const tempArray: any = [];
     let currentRow = [];
     let currentWidth = 0;
@@ -39,7 +40,7 @@ export function chunkArray(array: any[], maxWidth = 1700, maxItemsPerRow = 5) {
     }
 
     for (let i = 0; i < array.length; i++) {
-        console.log(array[i]);
+
         const itemWidth = 380; // chunk하나의 너비 고정임
         if (currentWidth + itemWidth > maxWidth || currentRow.length >= maxItemsPerRow) { // 화면의 넘어가면 다음 줄로
             tempArray.push(currentRow);

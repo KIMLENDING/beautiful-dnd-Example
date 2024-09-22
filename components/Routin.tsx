@@ -2,7 +2,7 @@
 "use client";
 import { cn } from '@/utils/utils';
 import { Check, Ellipsis, PencilOff, Plus, Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 
 import { chunkArray } from '@/utils/DargAndDropUtil';
@@ -119,11 +119,18 @@ const DropDownComponent = (props: DropDownComponentProps) => {
 const Routin = () => {
     const [mockData, setMockData] = useState<MockData[]>(mockData2);
     const [windowSize, setWindowSize] = useState({
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: 0,
+        height: 0,
     });
     const [maxItemsPerRow, setmaxItemsPerRow] = useState(4);// 한 행당 최대 아이템 수 설정
-    useEffect(() => {
+    // 클라이언트 환경에서 초기 크기 설정
+    useLayoutEffect(() => { // dom이 로드되기 전에 실행
+        const initialSize = {
+            width: window.innerWidth,
+            height: window.innerHeight,
+        };
+        setWindowSize(initialSize);
+
         // 윈도우 리사이즈 이벤트 핸들러
         function handleResize() {
             setWindowSize({
@@ -152,6 +159,7 @@ const Routin = () => {
             setmaxItemsPerRow(4);
         }
     }, [windowSize]);
+    console.log(windowSize.width)
     // --- Mock 데이터
     // --- requestAnimationFrame 초기화
     const [enabled, setEnabled] = useState(false); // 드래그 앤 드롭 활성화 여부
@@ -418,7 +426,7 @@ const Routin = () => {
                                                             <div
                                                                 ref={(el) => { scrollRefs.current[Data._id] = el }}
                                                                 className='flex flex-col gap-3 h-full max-h-[285px] overflow-y-auto p-1'
-                                                            >
+                                                            > {/**자식 리스트 */}
                                                                 <div className='flex flex-col gap-3  h-full'>
                                                                     {Data.todo?.map((todo: any, index: any) => (
                                                                         <Draggable key={todo._id} draggableId={todo._id} index={index} >
