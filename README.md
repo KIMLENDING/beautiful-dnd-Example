@@ -33,7 +33,6 @@ maxItemsPerRow: 한 줄에 들어갈 아이템 수 (mockData를 몇 조각으로
 mockData.length: 20, maxItemsPerRow: 4 이면 chunkArray는 [[0],[1],[2],[3],[4]] 5조각으로 나눠줌
 chunkedMockData는 length가 5이됨
 
-'''
 chunk는 위에서 5조각을 나눈 것중 하나가 됨 그럼 총 5개의 Droppable 컴포넌트가 생기는 것임
 <DragDropContext>
 <Droppable1/>
@@ -44,54 +43,56 @@ chunk는 위에서 5조각을 나눈 것중 하나가 됨 그럼 총 5개의 Dro
 </DragDropContext>
 이런 모양이 됨 같은 레벨에서는 <Droppable1/>컴포넌트간 <Dragable1/>이 가능해짐
 그럼 이제 <Dragable1/> 컴포넌트 안에 다시 <Droppable2/>을 넣어 주고 그안에 <Dragable2/>를 추가해 주면 된다. 간단하게 설명하면 이렇고
+
+```
 <DragDropContext>
-<Droppable1>
-<Dragable1>
-{
-<Droppable2>
-<Dragable2/>
-<Dragable2/>
-어러게...
-<Dragable2/>
-<Dragable2/>
-</Droppable2>
-}
-</Dragable1>
-여러게...
-<Dragable1>
-{
-<Droppable2>
-<Dragable2/>
-<Dragable2/>
-<Dragable2/>
-<Dragable2/>
-</Droppable2>
-}
-</Dragable1>
-</Droppable1>
-여러게..
-<Droppable1>
-<Dragable1>
-{
-<Droppable2>
-<Dragable2/>
-<Dragable2/>
-<Dragable2/>
-<Dragable2/>
-</Droppable2>
-}
-</Dragable1>
-<Dragable1>
-{
-<Droppable2>
-<Dragable2/>
-<Dragable2/>
-<Dragable2/>
-<Dragable2/>
-</Droppable2>
-}
-</Dragable1>
+    <Droppable1>
+        <Dragable1>
+        {
+            <Droppable2>
+                <Dragable2/>
+                <Dragable2/>
+                여러게...
+                <Dragable2/>
+                <Dragable2/>
+            </Droppable2>
+        }
+        </Dragable1>
+        여러게...
+        <Dragable1>
+        {
+            <Droppable2>
+                <Dragable2/>
+                <Dragable2/>
+                <Dragable2/>
+                <Dragable2/>
+            </Droppable2>
+                }
+        </Dragable1>
+    </Droppable1>
+        여러게..
+    <Droppable1>
+        <Dragable1>
+            {
+            <Droppable2>
+                <Dragable2/>
+                <Dragable2/>
+                <Dragable2/>
+                <Dragable2/>
+            </Droppable2>
+            }
+        </Dragable1>
+         <Dragable1>
+            {
+            <Droppable2>
+                <Dragable2/>
+                <Dragable2/>
+                <Dragable2/>
+                <Dragable2/>
+            </Droppable2>
+            }
+        </Dragable1>
 </Droppable1>
 </DragDropContext>
 이런 모양이 되는것임
-'''
+```
