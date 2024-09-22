@@ -39,6 +39,8 @@ export default function RootLayout({
           <Link href={'/test2'}>test2</Link>
           <Link href={'/sample'}>sample</Link>
           <Link href={'/routin'}>routin</Link>
+          <Link href={'/routin2'}>routin2</Link>
+          <Link href={'/grid'}>grid</Link>
         </div>
         {children}
       </body>
