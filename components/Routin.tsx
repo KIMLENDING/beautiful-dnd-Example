@@ -2,7 +2,7 @@
 "use client";
 import { cn } from '@/utils/utils';
 import { Check, Ellipsis, PencilOff, Plus, Trash2 } from 'lucide-react';
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 
 import { chunkArray } from '@/utils/DargAndDropUtil';
@@ -58,8 +58,8 @@ interface DropDownComponent2Props {
 }
 const DropDownComponent2 = (props: DropDownComponent2Props) => {
     return (
-        <DropdownMenu >
-            <DropdownMenuTrigger> <Ellipsis /> </DropdownMenuTrigger>
+        <DropdownMenu >{/** 부모 컴포넌트 옵션 */}
+            <DropdownMenuTrigger> <Ellipsis className='text-yellow-400' /> </DropdownMenuTrigger>
             <DropdownMenuContent className='bg-[#1F1F1F] text-gray-100'>
                 <DropdownMenuItem className='p-0' >
                     <button className='flex flex-row items-center justify-between gap-4 w-full m-2'
@@ -92,8 +92,8 @@ interface DropDownComponentProps {
 }
 const DropDownComponent = (props: DropDownComponentProps) => {
     return (
-        <DropdownMenu >
-            <DropdownMenuTrigger> <Ellipsis /> </DropdownMenuTrigger>
+        <DropdownMenu >{/** 자식 컴포넌트 옵션 */}
+            <DropdownMenuTrigger> <Ellipsis className='text-yellow-400' /> </DropdownMenuTrigger>
             <DropdownMenuContent className='bg-[#1F1F1F] text-gray-100'>
                 <DropdownMenuItem className='p-0'>
                     <button className='flex flex-row items-center justify-between gap-4 w-full m-2'
@@ -116,12 +116,13 @@ const DropDownComponent = (props: DropDownComponentProps) => {
 
 
 
-function useWindowSize() {
+const Routin = () => {
+    const [mockData, setMockData] = useState<MockData[]>(mockData2);
     const [windowSize, setWindowSize] = useState({
         width: window.innerWidth,
         height: window.innerHeight,
     });
-
+    const [maxItemsPerRow, setmaxItemsPerRow] = useState(4);// 한 행당 최대 아이템 수 설정
     useEffect(() => {
         // 윈도우 리사이즈 이벤트 핸들러
         function handleResize() {
@@ -139,25 +140,18 @@ function useWindowSize() {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
-
-    return windowSize;
-}
-const Routin = () => {
-    const [mockData, setMockData] = useState(mockData2);
-    const { width, height } = useWindowSize();
-    const [maxItemsPerRow, setmaxItemsPerRow] = useState(4);// 한 행당 최대 아이템 수 설정
     useEffect(() => {
-        if (width < 768) {
+        if (windowSize.width < 768) {
             setmaxItemsPerRow(1);
-        } else if (width >= 768 && width < 1236) {
+        } else if (windowSize.width >= 768 && windowSize.width < 1236) {
             setmaxItemsPerRow(2);
-        } else if (width >= 1236 && width < 1651) {
+        } else if (windowSize.width >= 1236 && windowSize.width < 1651) {
             setmaxItemsPerRow(3);
         }
         else {
             setmaxItemsPerRow(4);
         }
-    }, [width, height]);
+    }, [windowSize]);
     // --- Mock 데이터
     // --- requestAnimationFrame 초기화
     const [enabled, setEnabled] = useState(false); // 드래그 앤 드롭 활성화 여부
@@ -175,7 +169,7 @@ const Routin = () => {
 
     const maxWidth = 1000; // 최대 레이아웃 너비 설정
 
-    const chunkedMockData = chunkArray(mockData, maxWidth, maxItemsPerRow);
+    const chunkedMockData = chunkArray(mockData, maxWidth, maxItemsPerRow); // 최대 너비에 따라 배열을 나눔
 
     useEffect(() => {
         if (scrollToId && scrollRefs.current[scrollToId]) {
@@ -199,7 +193,7 @@ const Routin = () => {
             chunkedMockData[destChunkIndex].splice(destination.index, 0, movedItem);
 
             const flattenedMockData = chunkedMockData.flat();
-            flattenedMockData.forEach((item, index) => {
+            flattenedMockData.forEach((item: any, index: any) => {
                 item.indexDB = index;
             });
 
@@ -331,7 +325,7 @@ const Routin = () => {
             <div>{'해결함 부모에는 Droppable type="GROUP" 이라는 속성을 추가함'}</div>
             <div>{'자식에는 Droppable type="ITEM" 이라는 속성을 추가함'}</div>
             <DragDropContext onDragEnd={onDragEnd}>
-                {addTodo && edit ? (<> {/*부모 추가 모드  edit을 넣은 이유는 addTodd만 쓰면 다를 수정 모드일때 항 상 켜져서*/}
+                {addTodo && edit ? (<> {/*부모 추가 모드(데이터 입력 모드)  edit을 넣은 이유는 addTodd만 쓰면 다를 수정 모드일때 항 상 켜져서*/}
                     <div className='flex w-fit bg-[#1F1F1F] h-fit items-center justify-center rounded-xl'>
                         <div className='flex flex-col gap-3 rounded-lg bg-[#1F1F1F] p-4 transition-shadow group hover:ring-1 hover:ring-gray-300 shadow-lg shadow-[#272727]'>
                             <div className="flex justify-between items-center gap-3">
@@ -351,23 +345,23 @@ const Routin = () => {
                                     setEdit(false);
                                     setTitle('');
                                     setDiscription('');
-                                }}><Check /></button>
+                                }}><Check className='text-yellow-300' /></button>
                             </div>
-                            <input type="text" placeholder='부제목' value='' onChange={(e) => { setDiscription(e.target.value) }} className="text-xs text-gray-500 border-white border-b-2 bg-transparent" />
+                            <input type="text" placeholder='부제목' value={discription} onChange={(e) => { setDiscription(e.target.value) }} className="text-xs text-gray-500 border-white border-b-2 bg-transparent" />
                         </div>
                     </div>
-                </>) : (<>
+                </>) : (<> {/*부모 추가 모드(데이터 입력 모드) 아닐때 상시 보이는 추가 버튼 */}
                     <div className='flex w-fit bg-[#1F1F1F] h-fit items-center justify-center rounded-xl pb-2'>
                         <div className={cn(
                             'flex flex-row gap-3 rounded-lg bg-[#1F1F1F] p-4 transition-shadow group hover:ring-1 hover:ring-gray-300 shadow-lg shadow-[#272727]',
                         )} onClick={() => { setAddTodo(true); setEdit(true) }}
                         >
-                            <Plus />
+                            <Plus className='text-yellow-300' />
                             <p>create new routin</p>
                         </div>
                     </div>
                 </>)}
-                {chunkedMockData.map((chunk, chunkIndex) => (
+                {chunkedMockData.map((chunk: any, chunkIndex: any) => (
                     <Droppable droppableId={`row-${chunkIndex}`} direction='horizontal' key={chunkIndex} type="GROUP">
                         {(provided) => (
                             <div
@@ -375,7 +369,7 @@ const Routin = () => {
                                 {...provided.droppableProps}
                                 className="flex flex-wrap gap-8 w-full mb-8"
                             >
-                                {chunk.map((Data, index2) => (
+                                {chunk.map((Data: any, index2: any) => (
                                     <Draggable key={Data._id} draggableId={Data._id} index={index2} >
                                         {(provided) => (
                                             <div
@@ -401,7 +395,7 @@ const Routin = () => {
                                                                     <div className='flex flex-col w-full gap-1'>
                                                                         <div className="flex justify-between items-center">
                                                                             <input type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} className="text-sm font-semibold border-white border-b-2 bg-transparent" />
-                                                                            <button onClick={handleEdit2(Data._id)}><Check /></button>
+                                                                            <button onClick={handleEdit2(Data._id)}><Check className='text-yellow-300' /></button>
                                                                         </div>
                                                                         <input type="text" value={discription} onChange={(e) => { setDiscription(e.target.value) }} className="text-xs text-gray-500 border-white border-b-2 bg-transparent" />
                                                                     </div>
@@ -445,7 +439,7 @@ const Routin = () => {
                                                                                 >
                                                                                     {edit && choiseTodo === todo._id ? (<>{/*자식 수정 모드 */}
                                                                                         <div className='flex flex-row gap-4 items-center'>
-                                                                                            <button onClick={handleCompleted(todo._id)} className={cn("duration-300 transition-all p-1 text-xs font-semibold text-gray-900 rounded-full border-2 w-fit h-fit", todo.completed ? 'bg-green-500' : 'bg-opacity-0')}>
+                                                                                            <button onClick={handleCompleted(todo._id)} className={cn("duration-300 transition-all p-1 text-xs font-semibold text-gray-900 rounded-full border-2 w-fit h-fit", todo.completed ? 'bg-yellow-500' : 'bg-opacity-0')}>
                                                                                                 {todo.completed ? <Check size={16} /> : <><Check size={16} className='opacity-0' /></>}
                                                                                             </button>
                                                                                             <div className='flex flex-col w-full gap-1'>
@@ -456,9 +450,9 @@ const Routin = () => {
                                                                                                 <input type="text" value={discription} placeholder='부제목' onChange={(e) => { setDiscription(e.target.value) }} className="text-xs text-gray-500 border-white border-b-2 bg-transparent" />
                                                                                             </div>
                                                                                         </div>
-                                                                                    </>) : (<>
+                                                                                    </>) : (<>{/*자식 수정 모드 아닐때 */}
                                                                                         <div className='flex flex-row gap-4 items-center group '>
-                                                                                            <button onClick={handleCompleted(todo._id)} className={cn("duration-300 transition-all p-1 text-xs font-semibold text-gray-900 rounded-full border-2 w-fit h-fit", todo.completed ? 'bg-green-500' : 'bg-opacity-0')}>
+                                                                                            <button onClick={handleCompleted(todo._id)} className={cn("duration-300 transition-all p-1 text-xs font-semibold text-gray-900 rounded-full border-2 w-fit h-fit", todo.completed ? 'bg-yellow-500' : 'bg-opacity-0')}>
                                                                                                 {todo.completed ? <Check size={16} /> : <><Check size={16} className='opacity-0' /></>}
                                                                                             </button>
                                                                                             <div className='flex flex-col w-full gap-1 '>
@@ -515,7 +509,7 @@ const Routin = () => {
                                                                                         return;
                                                                                     }
                                                                                 }
-                                                                            }}><Check /></button>
+                                                                            }}><Check className='text-yellow-300' /></button>
                                                                         </div>
                                                                         <input type="text" placeholder='부제목' value={discription} onChange={(e) => { setDiscription(e.target.value) }} className="text-xs text-gray-500 border-white border-b-2 bg-transparent" />
                                                                     </div>
@@ -523,7 +517,7 @@ const Routin = () => {
                                                             </>) :
                                                                 (<>
                                                                     <div className='flex w-full justify-center ' onClick={() => { setAddTodo(true); setChoisePId(Data._id) }}>
-                                                                        <Plus className='duration-300 transition-all h-0  opacity-0 group-hover:opacity-100 group-hover:h-[24px]' />
+                                                                        <Plus className='duration-300 transition-all h-0  opacity-0 group-hover:opacity-100 group-hover:h-[24px] group-hover:text-yellow-400' />
                                                                     </div>
                                                                 </>)}
                                                         </div>

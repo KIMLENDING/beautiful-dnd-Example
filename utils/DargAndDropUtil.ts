@@ -30,9 +30,12 @@ function getTextWidth(content: any) {
 }
 
 export function chunkArray(array: any[], maxWidth = 1700, maxItemsPerRow = 5) {
-    const tempArray = [];
+    const tempArray: any = [];
     let currentRow = [];
     let currentWidth = 0;
+    if (array.length === 0) {
+        return tempArray;
+    }
 
     for (let i = 0; i < array.length; i++) {
         const itemWidth = getTextWidth(array[i].content);

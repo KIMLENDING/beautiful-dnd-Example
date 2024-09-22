@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+`Rutin.tsx 이 파일이 완성 파일 `
+{
+Rutin.tsx 파일 설명
+2쌍의 Droppable-Draggable 컴포넌트가 있다.
 
-## Getting Started
+1.  Droppable-Draggable type="GROUP" 컴포넌트
+2.  Droppable-Draggable type="ITEM" 컴포넌트
+    type을 설정하는 이유는 두 컴포넌트가 영역을 공유하지 않게 하기 위해
 
-First, run the development server:
+데이터 구조
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+interface Todo {
+    _id: string;
+    indexDB: number; // 순서
+    title: string;
+    discription: string; // 설명
+    completed: boolean;
+}
+interface MockData {
+    _id: string;
+    indexDB: number; // 순서
+    title: string; // 시간 - 이게 제목임
+    discription: string; // 설명
+    type: string[]; // 아침, 점심, 저녁 중복 가능 - 기본값 아침
+    todo?: Todo[]; // 할일
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+chunkedMockData = chunkArray(mockData, maxWidth, maxItemsPerRow);
+maxWidth: 최대 레이아웃 너비 설정 ex) 1000
+maxItemsPerRow: 한 줄에 들어갈 아이템 수 (mockData를 몇 조각으로 나눌지 결정)
+mockData.length: 20, maxItemsPerRow: 4 이면 chunkArray는 [[0],[1],[2],[3],[4]] 5조각으로 나눠줌
+chunkedMockData는 length가 5이됨
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+'''
+chunk는 위에서 5조각을 나눈 것중 하나가 됨 그럼 총 5개의 Droppable 컴포넌트가 생기는 것임
+<DragDropContext>
+<Droppable1/>
+<Droppable1/>
+<Droppable1/>
+<Droppable1/>
+<Droppable1/>
+</DragDropContext>
+이런 모양이 됨 같은 레벨에서는 <Droppable1/>컴포넌트간 <Dragable1/>이 가능해짐
+그럼 이제 <Dragable1/> 컴포넌트 안에 다시 <Droppable2/>을 넣어 주고 그안에 <Dragable2/>를 추가해 주면 된다. 간단하게 설명하면 이렇고
+<DragDropContext>
+<Droppable1>
+<Dragable1>
+{
+<Droppable2>
+<Dragable2/>
+<Dragable2/>
+어러게...
+<Dragable2/>
+<Dragable2/>
+</Droppable2>
+}
+</Dragable1>
+여러게...
+<Dragable1>
+{
+<Droppable2>
+<Dragable2/>
+<Dragable2/>
+<Dragable2/>
+<Dragable2/>
+</Droppable2>
+}
+</Dragable1>
+</Droppable1>
+여러게..
+<Droppable1>
+<Dragable1>
+{
+<Droppable2>
+<Dragable2/>
+<Dragable2/>
+<Dragable2/>
+<Dragable2/>
+</Droppable2>
+}
+</Dragable1>
+<Dragable1>
+{
+<Droppable2>
+<Dragable2/>
+<Dragable2/>
+<Dragable2/>
+<Dragable2/>
+</Droppable2>
+}
+</Dragable1>
+</Droppable1>
+</DragDropContext>
+이런 모양이 되는것임
+'''
