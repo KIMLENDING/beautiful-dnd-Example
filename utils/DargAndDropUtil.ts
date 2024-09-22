@@ -19,17 +19,18 @@ function getTextWidth(content: any) {
     let updatedWidthWithMarginAndBorder = width + 12;
     document.body.removeChild(text);
 
-    if (updatedWidthWithMarginAndBorder > 220) {
-        updatedWidthWithMarginAndBorder = 220;
+    if (updatedWidthWithMarginAndBorder > 380) {
+        updatedWidthWithMarginAndBorder = 380;
     }
     if (updatedWidthWithMarginAndBorder < 60) {
-        updatedWidthWithMarginAndBorder = 60;
+        updatedWidthWithMarginAndBorder = 380;
     }
-
+    console.log(updatedWidthWithMarginAndBorder);
     return updatedWidthWithMarginAndBorder;
 }
 
 export function chunkArray(array: any[], maxWidth = 1700, maxItemsPerRow = 5) {
+    //maxWidth는 화면의 너비를 의미함
     const tempArray: any = [];
     let currentRow = [];
     let currentWidth = 0;
@@ -38,17 +39,18 @@ export function chunkArray(array: any[], maxWidth = 1700, maxItemsPerRow = 5) {
     }
 
     for (let i = 0; i < array.length; i++) {
-        const itemWidth = getTextWidth(array[i].content);
-        if (currentWidth + itemWidth > maxWidth || currentRow.length >= maxItemsPerRow) {
+        console.log(array[i]);
+        const itemWidth = 380; // chunk하나의 너비 고정임
+        if (currentWidth + itemWidth > maxWidth || currentRow.length >= maxItemsPerRow) { // 화면의 넘어가면 다음 줄로
             tempArray.push(currentRow);
-            currentRow = [];
-            currentWidth = 0;
+            currentRow = []; // 새로운 줄
+            currentWidth = 0; // 너비 초기화
         }
         currentRow.push(array[i]);
         currentWidth += itemWidth;
     }
 
-    if (currentRow.length > 0) {
+    if (currentRow.length > 0) { // 마지막 줄
         tempArray.push(currentRow);
     }
 

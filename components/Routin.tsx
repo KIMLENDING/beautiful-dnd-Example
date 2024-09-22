@@ -167,7 +167,7 @@ const Routin = () => {
     const scrollRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
     const [scrollToId, setScrollToId] = useState<string | null>(null);
 
-    const maxWidth = 1000; // 최대 레이아웃 너비 설정
+    const maxWidth = windowSize.width; // 최대 레이아웃 너비 설정
 
     const chunkedMockData = chunkArray(mockData, maxWidth, maxItemsPerRow); // 최대 너비에 따라 배열을 나눔
 
@@ -318,7 +318,7 @@ const Routin = () => {
         return null;
     }
     return (
-        <div className='flex flex-col m-4'>
+        <div className='flex flex-col m-4 '>
             <div>{'외부에 행당 최대 아이템 수를 설정해서 넘으면 배열을 나누어서 새로운 행을 만들었음'}</div>
             <div>{'그 안에 이중으로 dnd를 만들어서 안에 있는 아이템들을 움직일 수 있도록 했는데'}</div>
             <div>{'문제가 부모 dnd와 자식 dnd가 영역을 침범함 '}</div>
@@ -367,7 +367,7 @@ const Routin = () => {
                             <div
                                 ref={provided.innerRef}
                                 {...provided.droppableProps}
-                                className="flex flex-wrap gap-8 w-full mb-8"
+                                className="flex flex-wrap gap-8 w-full mb-8 justify-center"
                             >
                                 {chunk.map((Data: any, index2: any) => (
                                     <Draggable key={Data._id} draggableId={Data._id} index={index2} >
