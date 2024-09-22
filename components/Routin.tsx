@@ -291,11 +291,11 @@ const Routin = () => {
     }
     return (
         <div className='flex flex-col m-4'>
-            <div>외부에 행당 최대 아이템 수를 설정해서 넘으면 배열을 나누어서 새로운 행을 만들었음</div>
-            <div>그 안에 이중으로 dnd를 만들어서 안에 있는 아이템들을 움직일 수 있도록 했는데</div>
-            <div>문제가 부모 dnd와 자식 dnd가 영역을 침범함 </div>
-            <div>해결함 부모에는 Droppable type="GROUP" 이라는 속성을 추가함</div>
-            <div>자식에는 Droppable type="ITEM" 이라는 속성을 추가함</div>
+            <div>{'외부에 행당 최대 아이템 수를 설정해서 넘으면 배열을 나누어서 새로운 행을 만들었음'}</div>
+            <div>{'그 안에 이중으로 dnd를 만들어서 안에 있는 아이템들을 움직일 수 있도록 했는데'}</div>
+            <div>{'문제가 부모 dnd와 자식 dnd가 영역을 침범함 '}</div>
+            <div>{'해결함 부모에는 Droppable type="GROUP" 이라는 속성을 추가함'}</div>
+            <div>{'자식에는 Droppable type="ITEM" 이라는 속성을 추가함'}</div>
             <DragDropContext onDragEnd={onDragEnd}>
                 {addTodo && edit ? (<> {/*부모 추가 모드  edit을 넣은 이유는 addTodd만 쓰면 다를 수정 모드일때 항 상 켜져서*/}
                     <div className='flex w-fit bg-[#1F1F1F] h-fit items-center justify-center rounded-xl'>

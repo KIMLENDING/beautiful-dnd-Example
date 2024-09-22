@@ -132,7 +132,7 @@ const Routin = () => {
     const [scrollId, setScrollId] = useState(0);// 스크롤 아이디
 
 
-    const onDragEnd = ({ source, destination, type, draggableId }: DropResult) => {
+    const onDragEnd = ({ source, destination }: DropResult) => {
         if (!destination) return;
         if (source.droppableId === 'columns') {
             if (source.index === mockData[source.index].indexDB) {
