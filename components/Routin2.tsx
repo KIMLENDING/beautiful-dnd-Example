@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { cn } from '@/utils/utils';
 import { Check, Ellipsis, PencilOff, Plus, Trash2 } from 'lucide-react';
