@@ -369,177 +369,189 @@ const Routin = () => {
                         </div>
                     </div>
                 </>)}
-                {chunkedMockData.map((chunk: any, chunkIndex: any) => (
-                    <Droppable droppableId={`row-${chunkIndex}`} direction='horizontal' key={chunkIndex} type="GROUP">
-                        {(provided) => (
-                            <div
-                                ref={provided.innerRef}
-                                {...provided.droppableProps}
-                                className="flex flex-wrap gap-8 w-full mb-8 justify-center"
-                            >
-                                {chunk.map((Data: any, index2: any) => (
-                                    <Draggable key={Data._id} draggableId={Data._id} index={index2} >
-                                        {(provided) => (
-                                            <div
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                                className="w-[380px]"
-                                            >
-                                                <Droppable droppableId={`todo-${Data.title}`} type="ITEM">
-                                                    {(provided, snapshot) => (
-                                                        <div
-                                                            ref={provided.innerRef}
-                                                            {...provided.droppableProps}
-                                                            className={cn(
-                                                                'min-w-[240px] max-w-[520px]  flex flex-col gap-3 rounded-xl p-4 active:ring-1 active:ring-gray-300 bg-[#1F1F1F] transition-all group duration-700 hover:ring-1 hover:ring-gray-300',
-                                                                snapshot.isDraggingOver ? 'shadow-lg shadow-gray-400' : '',
-                                                                'h-fit',
-                                                                edit2 && choisePId === Data._id ? ' ring-1 ring-gray-300' : ' ring-0 ring-transparent' // 수정 모드일때
-                                                            )}
-                                                        >
-                                                            {edit2 && choisePId === Data._id ? (<> {/*부모 수정 모드 */}
-                                                                <div className='flex flex-row gap-4 items-center'>
-                                                                    <div className='flex flex-col w-full gap-1'>
-                                                                        <div className="flex justify-between items-center">
-                                                                            <input type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} className="text-sm font-semibold border-white border-b-2 bg-transparent" />
-                                                                            <button onClick={handleEdit2(Data._id)}><Check className='text-yellow-300' /></button>
-                                                                        </div>
-                                                                        <input type="text" value={discription} onChange={(e) => { setDiscription(e.target.value) }} className="text-xs text-gray-500 border-white border-b-2 bg-transparent" />
-                                                                    </div>
-                                                                </div>
-                                                            </>) : (<>
-                                                                <div className='flex flex-col w-full gap-1 px-3 '>
-                                                                    <div className="flex justify-between items-center">
-                                                                        <span className="text-sm font-semibold">
-                                                                            {Data.title}
-                                                                        </span>
-                                                                        <div className='opacity-0 group-hover:opacity-100 duration-300 transition-all'>
-                                                                            <DropDownComponent2 title={Data.title} _id={Data._id} discription={Data.discription} handleDelet2={handleDelet2(Data._id)} setEdit2={setEdit2} setTitle={setTitle} setDiscription={setDiscription} setChoisePId={setChoisePId} />
-                                                                        </div>
-                                                                    </div>
-                                                                    <span className="text-xs text-gray-500">
-                                                                        {Data.discription}
-                                                                    </span>
-                                                                </div>
-                                                            </>)}
-                                                            <div
-                                                                ref={(el) => { scrollRefs.current[Data._id] = el }}
-                                                                className='flex flex-col gap-3 h-full max-h-[285px] overflow-y-auto p-1'
-                                                            > {/**자식 리스트 */}
-                                                                <div className='flex flex-col gap-3  h-full'>
-                                                                    {Data.todo?.map((todo: any, index: any) => (
-                                                                        <Draggable key={todo._id} draggableId={todo._id} index={index} >
-                                                                            {(provided, snapshot) => (
-                                                                                <div
-                                                                                    ref={provided.innerRef}
-                                                                                    {...provided.draggableProps}
-                                                                                    {...provided.dragHandleProps}
-                                                                                    onMouseEnter={() => { setHover(true); setHoverId(todo._id) }}
-                                                                                    onMouseLeave={() => { setHover(false); setHoverId('') }}
-                                                                                    className={cn(
-                                                                                        "rounded-lg bg-[#1F1F1F] p-4 hover:ring-1 hover:ring-gray-300  duration-300 transition-all ",
-                                                                                        snapshot.isDragging
-                                                                                            ? 'bg-opacity-90 shadow-lg shadow-gray-400'
-                                                                                            : 'shadow shadow-[#272727]', // 드래그 중일때
-                                                                                        edit && choiseTodo === todo._id ? 'ring-1 ring-gray-300' : 'ring-0 ring-transparent' // 수정 모드일때
-                                                                                    )}
-                                                                                >
-                                                                                    {edit && choiseTodo === todo._id ? (<>{/*자식 수정 모드 */}
-                                                                                        <div className='flex flex-row gap-4 items-center'>
-                                                                                            <button onClick={handleCompleted(todo._id)} className={cn("duration-300 transition-all p-1 text-xs font-semibold text-gray-900 rounded-full border-2 w-fit h-fit", todo.completed ? 'bg-yellow-500' : 'bg-opacity-0')}>
-                                                                                                {todo.completed ? <Check size={16} /> : <><Check size={16} className='opacity-0' /></>}
-                                                                                            </button>
-                                                                                            <div className='flex flex-col w-full gap-1'>
-                                                                                                <div className="flex justify-between items-center">
-                                                                                                    <input type="text" value={title} placeholder='제목' onChange={(e) => { setTitle(e.target.value) }} className="text-sm font-semibold border-white border-b-2 bg-transparent" />
-                                                                                                    <button onClick={handleEdit(todo._id)}><Check /></button>
-                                                                                                </div>
-                                                                                                <input type="text" value={discription} placeholder='부제목' onChange={(e) => { setDiscription(e.target.value) }} className="text-xs text-gray-500 border-white border-b-2 bg-transparent" />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </>) : (<>{/*자식 수정 모드 아닐때 */}
-                                                                                        <div className='flex flex-row gap-4 items-center group '>
-                                                                                            <button onClick={handleCompleted(todo._id)} className={cn("duration-300 transition-all p-1 text-xs font-semibold text-gray-900 rounded-full border-2 w-fit h-fit", todo.completed ? 'bg-yellow-500' : 'bg-opacity-0')}>
-                                                                                                {todo.completed ? <Check size={16} /> : <><Check size={16} className='opacity-0' /></>}
-                                                                                            </button>
-                                                                                            <div className='flex flex-col w-full gap-1 '>
-                                                                                                <div className="flex justify-between items-center ">
-                                                                                                    <span className="text-sm font-semibold ">
-                                                                                                        {todo.title}
-                                                                                                    </span>
-                                                                                                    <div className={`duration-300 transition-all ${isHovered && ishoverId === todo._id ? 'group-hover:opacity-100' : 'opacity-0'}`}>
-                                                                                                        <DropDownComponent title={todo.title} _id={todo._id} discription={todo.discription} handleDelet={handleDelet(todo._id)} setEdit={setEdit} setTitle={setTitle} setDiscription={setDiscription} setChoiseTodo={setChoiseTodo} />
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                                <span className="text-xs text-gray-500">
-                                                                                                    {todo.discription}
-                                                                                                </span>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </>)}
-                                                                                </div>
-                                                                            )}
-                                                                        </Draggable>
-                                                                    ))}
-                                                                    {provided.placeholder}
-                                                                </div>
-                                                            </div>
-                                                            {addTodo && choisePId === Data._id ? (<> {/*자식 todo 추가 모드*/}
-                                                                <div className='flex flex-row gap-4 items-center ring-1 ring-white rounded-lg p-4'>
-                                                                    {addTodo}
-                                                                    <div className='flex flex-col w-full gap-1'>
-                                                                        <div className="flex justify-between items-center">
-                                                                            <input type="text" placeholder='제목' value={title} onChange={(e) => { setTitle(e.target.value) }} className="text-sm font-semibold border-white border-b-2 bg-transparent" />
-                                                                            <button onClick={() => {
-                                                                                const _items = JSON.parse(JSON.stringify(mockData)) as typeof mockData;
-                                                                                for (let i = 0; i < _items.length; i++) { // 부요요소가 없으면 todo를 추가 할 수 없기 때문에 _items.length는 0이 될 수 없음
-                                                                                    if (_items[i]._id === Data._id) {
-                                                                                        _items[i].todo = _items[i].todo || [];
-                                                                                        _items[i].todo?.push({
-                                                                                            _id: `todo-${Data._id}-${_items[i].todo!.length}`,
-                                                                                            indexDB: _items[i].todo!.length,
-                                                                                            title: title,
-                                                                                            discription: discription,
-                                                                                            completed: false
-                                                                                        });
-                                                                                        console.log(scrollRefs.current[Data._id]?.scrollHeight)
+                <div className='mx-auto'>
+                    {chunkedMockData.map((chunk: any, chunkIndex: any) => (
+                        <Droppable droppableId={`row-${chunkIndex}`} direction='horizontal' key={chunkIndex} type="GROUP">
+                            {(provided) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                    className="flex flex-wrap gap-8 w-full mx-auto mb-8 justify-start"
+                                >
 
-                                                                                        if (scrollRefs.current[Data._id]) {
-                                                                                            scrollRefs.current[Data._id]!.scrollTop = scrollRefs.current[Data._id]!.scrollHeight;
-                                                                                        }
-                                                                                        setMockData(_items);
-                                                                                        setAddTodo(false);
-                                                                                        setChoisePId('');
-                                                                                        setTitle('');
-                                                                                        setDiscription('');
-                                                                                        setScrollToId(Data._id);
-                                                                                        return;
-                                                                                    }
-                                                                                }
-                                                                            }}><Check className='text-yellow-300' /></button>
+                                    {chunk.map((Data: any, index2: any) => (
+                                        <Draggable key={Data._id} draggableId={Data._id} index={index2} >
+                                            {(provided) => (
+                                                <div
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                    className="w-[380px]"
+                                                >
+                                                    <Droppable droppableId={`todo-${Data.title}`} type="ITEM">
+                                                        {(provided, snapshot) => (
+                                                            <div
+                                                                ref={provided.innerRef}
+                                                                {...provided.droppableProps}
+                                                                className={cn(
+                                                                    'min-w-[240px] max-w-[520px]  flex flex-col gap-3 rounded-xl p-4 active:ring-1 active:ring-gray-300 bg-[#1F1F1F] transition-all group duration-700 hover:ring-1 hover:ring-gray-300',
+                                                                    snapshot.isDraggingOver ? 'shadow-lg shadow-gray-400' : '',
+                                                                    'h-fit',
+                                                                    edit2 && choisePId === Data._id ? ' ring-1 ring-gray-300' : ' ring-0 ring-transparent' // 수정 모드일때
+                                                                )}
+                                                            >
+                                                                {edit2 && choisePId === Data._id ? (<> {/*부모 수정 모드 */}
+                                                                    <div className='flex flex-row gap-4 items-center'>
+                                                                        <div className='flex flex-col w-full gap-1'>
+                                                                            <div className="flex justify-between items-center">
+                                                                                <input type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} className="text-sm font-semibold border-white border-b-2 bg-transparent" />
+                                                                                <button onClick={handleEdit2(Data._id)}><Check className='text-yellow-300' /></button>
+                                                                            </div>
+                                                                            <input type="text" value={discription} onChange={(e) => { setDiscription(e.target.value) }} className="text-xs text-gray-500 border-white border-b-2 bg-transparent" />
                                                                         </div>
-                                                                        <input type="text" placeholder='부제목' value={discription} onChange={(e) => { setDiscription(e.target.value) }} className="text-xs text-gray-500 border-white border-b-2 bg-transparent" />
                                                                     </div>
-                                                                </div>
-                                                            </>) :
-                                                                (<>
-                                                                    <div className='flex w-full justify-center ' onClick={() => { setAddTodo(true); setChoisePId(Data._id) }}>
-                                                                        <Plus className='duration-300 transition-all h-0  opacity-0 group-hover:opacity-100 group-hover:h-[24px] group-hover:text-yellow-400' />
+                                                                </>) : (<>
+                                                                    <div className='flex flex-col w-full gap-1 px-3 '>
+                                                                        <div className="flex justify-between items-center">
+                                                                            <span className="text-sm font-semibold">
+                                                                                {Data.title}
+                                                                            </span>
+                                                                            <div className='opacity-0 group-hover:opacity-100 duration-300 transition-all'>
+                                                                                <DropDownComponent2 title={Data.title} _id={Data._id} discription={Data.discription} handleDelet2={handleDelet2(Data._id)} setEdit2={setEdit2} setTitle={setTitle} setDiscription={setDiscription} setChoisePId={setChoisePId} />
+                                                                            </div>
+                                                                        </div>
+                                                                        <span className="text-xs text-gray-500">
+                                                                            {Data.discription}
+                                                                        </span>
                                                                     </div>
                                                                 </>)}
-                                                        </div>
-                                                    )}
-                                                </Droppable>
-                                            </div>
-                                        )}
-                                    </Draggable>
-                                ))}
-                                {provided.placeholder}
-                            </div>
-                        )}
-                    </Droppable>
-                ))}
+                                                                <div
+                                                                    ref={(el) => { scrollRefs.current[Data._id] = el }}
+                                                                    className='flex flex-col gap-3 h-full max-h-[285px] overflow-y-auto p-1'
+                                                                > {/**자식 리스트 */}
+                                                                    <div className='flex flex-col gap-3  h-full'>
+                                                                        {Data.todo?.map((todo: any, index: any) => (
+                                                                            <Draggable key={todo._id} draggableId={todo._id} index={index} >
+                                                                                {(provided, snapshot) => (
+                                                                                    <div
+                                                                                        ref={provided.innerRef}
+                                                                                        {...provided.draggableProps}
+                                                                                        {...provided.dragHandleProps}
+                                                                                        onMouseEnter={() => { setHover(true); setHoverId(todo._id) }}
+                                                                                        onMouseLeave={() => { setHover(false); setHoverId('') }}
+                                                                                        className={cn(
+                                                                                            "rounded-lg bg-[#1F1F1F] p-4 hover:ring-1 hover:ring-gray-300  duration-300 transition-all ",
+                                                                                            snapshot.isDragging
+                                                                                                ? 'bg-opacity-90 shadow-lg shadow-gray-400'
+                                                                                                : 'shadow shadow-[#272727]', // 드래그 중일때
+                                                                                            edit && choiseTodo === todo._id ? 'ring-1 ring-gray-300' : 'ring-0 ring-transparent' // 수정 모드일때
+                                                                                        )}
+                                                                                    >
+                                                                                        {edit && choiseTodo === todo._id ? (<>{/*자식 수정 모드 */}
+                                                                                            <div className='flex flex-row gap-4 items-center'>
+                                                                                                <button onClick={handleCompleted(todo._id)} className={cn("duration-300 transition-all p-1 text-xs font-semibold text-gray-900 rounded-full border-2 w-fit h-fit", todo.completed ? 'bg-yellow-500' : 'bg-opacity-0')}>
+                                                                                                    {todo.completed ? <Check size={16} /> : <><Check size={16} className='opacity-0' /></>}
+                                                                                                </button>
+                                                                                                <div className='flex flex-col w-full gap-1'>
+                                                                                                    <div className="flex justify-between items-center">
+                                                                                                        <input type="text" value={title} placeholder='제목' onChange={(e) => { setTitle(e.target.value) }} className="text-sm font-semibold border-white border-b-2 bg-transparent" />
+                                                                                                        <button onClick={handleEdit(todo._id)}><Check /></button>
+                                                                                                    </div>
+                                                                                                    <input type="text" value={discription} placeholder='부제목' onChange={(e) => { setDiscription(e.target.value) }} className="text-xs text-gray-500 border-white border-b-2 bg-transparent" />
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </>) : (<>{/*자식 수정 모드 아닐때 */}
+                                                                                            <div className='flex flex-row gap-4 items-center group '>
+                                                                                                <button onClick={handleCompleted(todo._id)} className={cn("duration-300 transition-all p-1 text-xs font-semibold text-gray-900 rounded-full border-2 w-fit h-fit", todo.completed ? 'bg-yellow-500' : 'bg-opacity-0')}>
+                                                                                                    {todo.completed ? <Check size={16} /> : <><Check size={16} className='opacity-0' /></>}
+                                                                                                </button>
+                                                                                                <div className='flex flex-col w-full gap-1 '>
+                                                                                                    <div className="flex justify-between items-center ">
+                                                                                                        <span className={cn("relative text-sm font-semibold transition-all duration-700 ease-in-out", todo.completed ? ' opacity-50' : 'opacity-100')}>
+
+                                                                                                            {todo.title}
+                                                                                                            <span className={` absolute left-1/2 right-0 top-1/2 h-0.5 bg-current transform scale-x-0 origin-left transition-transform duration-300 ease-in-out
+                                                                                                                 ${todo.completed ? 'scale-x-100' : 'scale-x-0'}`}
+                                                                                                            ></span>
+                                                                                                            <span className={` absolute left-1/2 right-0 top-1/2 h-0.5 bg-current transform scale-x-0 origin-left transition-transform duration-300 ease-in-out
+                                                                                                                 ${todo.completed ? '-scale-x-100' : 'scale-x-0'}`}
+                                                                                                            ></span>
+
+                                                                                                        </span>
+                                                                                                        <div className={`duration-300 transition-all ${isHovered && ishoverId === todo._id ? 'group-hover:opacity-100' : 'opacity-0'}`}>
+                                                                                                            <DropDownComponent title={todo.title} _id={todo._id} discription={todo.discription} handleDelet={handleDelet(todo._id)} setEdit={setEdit} setTitle={setTitle} setDiscription={setDiscription} setChoiseTodo={setChoiseTodo} />
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <span className="text-xs text-gray-500 ">
+                                                                                                        {todo.discription}
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </>)}
+                                                                                    </div>
+                                                                                )}
+                                                                            </Draggable>
+                                                                        ))}
+                                                                        {provided.placeholder}
+                                                                    </div>
+                                                                </div>
+                                                                {addTodo && choisePId === Data._id ? (<> {/*자식 todo 추가 모드*/}
+                                                                    <div className='flex flex-row gap-4 items-center ring-1 ring-white rounded-lg p-4'>
+                                                                        {addTodo}
+                                                                        <div className='flex flex-col w-full gap-1'>
+                                                                            <div className="flex justify-between items-center">
+                                                                                <input type="text" placeholder='제목' value={title} onChange={(e) => { setTitle(e.target.value) }} className="text-sm font-semibold border-white border-b-2 bg-transparent" />
+                                                                                <button onClick={() => {
+                                                                                    const _items = JSON.parse(JSON.stringify(mockData)) as typeof mockData;
+                                                                                    for (let i = 0; i < _items.length; i++) { // 부요요소가 없으면 todo를 추가 할 수 없기 때문에 _items.length는 0이 될 수 없음
+                                                                                        if (_items[i]._id === Data._id) {
+                                                                                            _items[i].todo = _items[i].todo || [];
+                                                                                            _items[i].todo?.push({
+                                                                                                _id: `todo-${Data._id}-${_items[i].todo!.length}`,
+                                                                                                indexDB: _items[i].todo!.length,
+                                                                                                title: title,
+                                                                                                discription: discription,
+                                                                                                completed: false
+                                                                                            });
+                                                                                            console.log(scrollRefs.current[Data._id]?.scrollHeight)
+
+                                                                                            if (scrollRefs.current[Data._id]) {
+                                                                                                scrollRefs.current[Data._id]!.scrollTop = scrollRefs.current[Data._id]!.scrollHeight;
+                                                                                            }
+                                                                                            setMockData(_items);
+                                                                                            setAddTodo(false);
+                                                                                            setChoisePId('');
+                                                                                            setTitle('');
+                                                                                            setDiscription('');
+                                                                                            setScrollToId(Data._id);
+                                                                                            return;
+                                                                                        }
+                                                                                    }
+                                                                                }}><Check className='text-yellow-300' /></button>
+                                                                            </div>
+                                                                            <input type="text" placeholder='부제목' value={discription} onChange={(e) => { setDiscription(e.target.value) }} className="text-xs text-gray-500 border-white border-b-2 bg-transparent" />
+                                                                        </div>
+                                                                    </div>
+                                                                </>) :
+                                                                    (<>
+                                                                        <div className='flex w-full justify-center ' onClick={() => { setAddTodo(true); setChoisePId(Data._id) }}>
+                                                                            <Plus className='duration-300 transition-all h-0  opacity-0 group-hover:opacity-100 group-hover:h-[24px] group-hover:text-yellow-400' />
+                                                                        </div>
+                                                                    </>)}
+                                                            </div>
+                                                        )}
+                                                    </Droppable>
+                                                </div>
+                                            )}
+                                        </Draggable>
+                                    ))}
+
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    ))}
+                </div>
 
             </DragDropContext>
         </div>
