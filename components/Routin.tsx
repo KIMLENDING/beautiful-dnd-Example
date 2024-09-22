@@ -2,7 +2,7 @@
 "use client";
 import { cn } from '@/utils/utils';
 import { Check, Ellipsis, PencilOff, Plus, Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 
 import { chunkArray } from '@/utils/DargAndDropUtil';
@@ -116,10 +116,48 @@ const DropDownComponent = (props: DropDownComponentProps) => {
 
 
 
+function useWindowSize() {
+    const [windowSize, setWindowSize] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    });
 
+    useEffect(() => {
+        // 윈도우 리사이즈 이벤트 핸들러
+        function handleResize() {
+            setWindowSize({
+                width: window.innerWidth,
+                height: window.innerHeight,
+            });
+        }
+
+        // 리사이즈 이벤트 등록
+        window.addEventListener('resize', handleResize);
+
+        // 컴포넌트가 언마운트될 때 이벤트 제거
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    return windowSize;
+}
 const Routin = () => {
     const [mockData, setMockData] = useState(mockData2);
-
+    const { width, height } = useWindowSize();
+    const [maxItemsPerRow, setmaxItemsPerRow] = useState(4);// 한 행당 최대 아이템 수 설정
+    useEffect(() => {
+        if (width < 768) {
+            setmaxItemsPerRow(1);
+        } else if (width >= 768 && width < 1236) {
+            setmaxItemsPerRow(2);
+        } else if (width >= 1236 && width < 1651) {
+            setmaxItemsPerRow(3);
+        }
+        else {
+            setmaxItemsPerRow(4);
+        }
+    }, [width, height]);
     // --- Mock 데이터
     // --- requestAnimationFrame 초기화
     const [enabled, setEnabled] = useState(false); // 드래그 앤 드롭 활성화 여부
@@ -136,7 +174,7 @@ const Routin = () => {
     const [scrollToId, setScrollToId] = useState<string | null>(null);
 
     const maxWidth = 1000; // 최대 레이아웃 너비 설정
-    const maxItemsPerRow = 4; // 한 행당 최대 아이템 수 설정
+
     const chunkedMockData = chunkArray(mockData, maxWidth, maxItemsPerRow);
 
     useEffect(() => {
@@ -196,7 +234,6 @@ const Routin = () => {
 
     useEffect(() => {
         const animation = requestAnimationFrame(() => setEnabled(true));
-
         return () => {
             cancelAnimationFrame(animation);
             setEnabled(false);
@@ -235,7 +272,6 @@ const Routin = () => {
         }
     };
     const handleEdit2 = (mockId: string) => {
-        console.log(1)
         return () => {
             const _items = JSON.parse(JSON.stringify(mockData)) as typeof mockData;
             for (let i = 0; i < _items.length; i++) {
@@ -255,7 +291,6 @@ const Routin = () => {
 
     const handleDelet = (todoId: string) => {
         return () => {
-
             const _items = JSON.parse(JSON.stringify(mockData)) as typeof mockData;
             for (let i = 0; i < _items.length; i++) {
                 const todo = _items[i].todo?.find((todo) => todo._id === todoId);
@@ -275,7 +310,6 @@ const Routin = () => {
     };
     const handleDelet2 = (mockId: string) => {
         return () => {
-
             const _items = JSON.parse(JSON.stringify(mockData)) as typeof mockData;
             const index = _items.findIndex((item) => item._id === mockId);
             _items.splice(index, 1);// 삭제
@@ -319,7 +353,7 @@ const Routin = () => {
                                     setDiscription('');
                                 }}><Check /></button>
                             </div>
-                            <input type="text" placeholder='부제목' value={discription} onChange={(e) => { setDiscription(e.target.value) }} className="text-xs text-gray-500 border-white border-b-2 bg-transparent" />
+                            <input type="text" placeholder='부제목' value='' onChange={(e) => { setDiscription(e.target.value) }} className="text-xs text-gray-500 border-white border-b-2 bg-transparent" />
                         </div>
                     </div>
                 </>) : (<>
@@ -334,7 +368,7 @@ const Routin = () => {
                     </div>
                 </>)}
                 {chunkedMockData.map((chunk, chunkIndex) => (
-                    <Droppable droppableId={`row-${chunkIndex}`} direction="horizontal" key={chunkIndex} type="GROUP">
+                    <Droppable droppableId={`row-${chunkIndex}`} direction='horizontal' key={chunkIndex} type="GROUP">
                         {(provided) => (
                             <div
                                 ref={provided.innerRef}
