@@ -376,7 +376,7 @@ const Routin = () => {
                                 <div
                                     ref={provided.innerRef}
                                     {...provided.droppableProps}
-                                    className="flex flex-wrap gap-8 w-full mx-auto mb-8 justify-start"
+                                    className="flex flex-wrap gap-8 w-full justify-start h-[420px]"
                                 >
 
                                     {chunk.map((Data: any, index2: any) => (
@@ -427,9 +427,9 @@ const Routin = () => {
                                                                 </>)}
                                                                 <div
                                                                     ref={(el) => { scrollRefs.current[Data._id] = el }}
-                                                                    className='flex flex-col gap-3 h-full max-h-[285px] overflow-y-auto p-1'
+                                                                    className='flex flex-col gap-3 h-full max-h-[285px] overflow-y-auto p-1 '
                                                                 > {/**자식 리스트 */}
-                                                                    <div className='flex flex-col gap-3  h-full'>
+                                                                    <div className='flex flex-col gap-3  h-full '>
                                                                         {Data.todo?.map((todo: any, index: any) => (
                                                                             <Draggable key={todo._id} draggableId={todo._id} index={index} >
                                                                                 {(provided, snapshot) => (
@@ -473,8 +473,8 @@ const Routin = () => {
                                                                                                             <span className={` absolute left-1/2 right-0 top-1/2 h-0.5 bg-current transform scale-x-0 origin-left transition-transform duration-300 ease-in-out
                                                                                                                  ${todo.completed ? 'scale-x-100' : 'scale-x-0'}`}
                                                                                                             ></span>
-                                                                                                            <span className={` absolute left-1/2 right-0 top-1/2 h-0.5 bg-current transform scale-x-0 origin-left transition-transform duration-300 ease-in-out
-                                                                                                                 ${todo.completed ? '-scale-x-100' : 'scale-x-0'}`}
+                                                                                                            <span className={` absolute left-0 right-1/2 top-1/2 h-0.5 bg-current transform scale-x-0 origin-right transition-transform duration-300 ease-in-out
+                                                                                                                 ${todo.completed ? 'scale-x-100' : 'scale-x-0'}`}
                                                                                                             ></span>
 
                                                                                                         </span>
