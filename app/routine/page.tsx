@@ -1,11 +1,10 @@
-import Routin from '@/components/Routin'
+import Routine from '@/components/Routine/Routine'
 import React from 'react'
 
 const Page = () => {
     return (
         <div>
-            <Routin />
-
+            <Routine />
         </div>
     )
 }

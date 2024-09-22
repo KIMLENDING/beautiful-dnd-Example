@@ -39,61 +39,33 @@ export default function App() {
   // --- requestAnimationFrame 초기화 END
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="all-columns">
-        {(provided) => (
-          <div ref={provided.innerRef} {...provided.droppableProps}>
-            {items.map((item, index) => (
-              <Draggable key={item.id} draggableId={item.id} index={index}>
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  >
-                    {item.content}
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <div>
+
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="all-columns">
+          {(provided) => (
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              {items.map((item, index) => (
+                <Draggable key={item.id} draggableId={item.id} index={index}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      {item.content}
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+      <div className='rounded-full'>
+        <input type="color" className='rounded-full border-none ring-0' />
+      </div>
+    </div>
   );
 }
-/**
- <DragDropContext>
-    <Droppable droppableId="all-columns">
-    {(provided) => (
-        <div className="listBox"
-                            {...provided.droppableProps}
-                            ref={provided.innerRef}>
-            {items.map((item, index) => {
-                <Draggable draggableId={고유 값1} index={index}>
-                    {(provided) => (
-                    <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                    >
-                         <Droppable droppableId={고유값 2} type="task">
-                         {(provided, snapshot) => (<div ref={provided.innerRef}
-                                                        className={clsx("task_list", snapshot.isDraggingOver ? 'active' : null)}
-                                                        {...provided.droppableProps}>
-                            {item.content}
-                            </div>
-                                
-                        </Droppable>
-                        {item.content}
-                    </div>
-                )}
-                </Draggable>
-            })}
-        </div>
-        )}
-    </Droppable>
- </DragDropContext>
- * 컨택스트-> 드롭 -> 드래그 ->  드롭 -> 드래그
-*/
